@@ -16,6 +16,7 @@ namespace FunWithClaimsIdentity
 
             UsePrincipalLegacy();
             UsePrincipalNewCode();
+
         }
 
         private static void UsePrincipalNewCode()
@@ -42,7 +43,7 @@ namespace FunWithClaimsIdentity
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, "Jon"),
-                new Claim(ClaimTypes.Email, "jcrowell@livelogic.net"),
+                new Claim(ClaimTypes.Email, "foo@bar.net"),
                 new Claim(ClaimTypes.Role, "Geek"),
                 new Claim(ClaimTypes.Role, "Dad"),
                 new Claim(ClaimTypes.Role, "Husband"),
@@ -60,6 +61,21 @@ namespace FunWithClaimsIdentity
 
             var p = new ClaimsPrincipal(id);
             Thread.CurrentPrincipal = p;
+        }
+    }
+
+    sealed class CorpIdentity : ClaimsIdentity
+    {
+        public CorpIdentity(string name, string reportsTo, string office)
+        {
+            AddClaim(new Claim(ClaimTypes.Name, name));
+            AddClaim(new Claim("reportsTo", reportsTo));
+            AddClaim(new Claim("office", office));
+        }
+
+        public string ReportsTo
+        {
+            get { return FindFirst("reportsTo").Value; }
         }
     }
 }
